@@ -1,4 +1,4 @@
-from prepareRecip import Prepare
+from prepareRecipe import Prepare
 
 runProgram = Prepare()
 
