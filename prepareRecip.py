@@ -1,6 +1,8 @@
 import requests
 import json
 
+import boto3
+from botocore.exceptions import ClientError
 
 class Prepare:
     def __init__(self):
@@ -26,7 +28,7 @@ class Prepare:
         self.r4 = self.r3[0]
         
 
-        print(type(self.r4))
+    
         
         
         
@@ -65,7 +67,66 @@ class Prepare:
             {self.r4["strMeasure20"]} {self.r4["strIngredient20"]}
             Instructions:
             {self.r4["strInstructions"]}"""
+        Sender(recipe)
+
+class Sender:
+    def __init__(self, recipe):
+        self.recipe = recipe
+        self.sender = "dev.martinez86@gmail.com"
+        self.recipient = "sababrocks@gmail.com"
+        self.aws_region = "us-east-1"
+        self.subject = "Your New Recipe suggestion"
+        self.body_text = (f"{recipe}")
+        self.body_html = f"""<html>
+            <head></head>
+            <body>
+            <h1>Your New Recipe Suggestion</h1>
+            <p>{recipe}</p>
+            </body>
+            </html>
+            """    
+        self.charset = "UTF-8"      
+        self.client = boto3.client('ses',region_name=self.aws_region)
+        self.sendRecipe()
+    
+    def sendRecipe(self):
+        try:
+            #Provide the contents of the email.
+            response = self.client.send_email(
+                Destination={
+                    'ToAddresses': [
+                        self.recipient,
+                    ],
+                },
+                Message={
+                    'Body': {
+                        'Html': {
+                            'Charset': self.charset,
+                            'Data': self.body_html,
+                        },
+                        'Text': {
+                            'Charset':self.charset,
+                            'Data': self.body_text,
+                        },
+                    },
+                    'Subject': {
+                        'Charset': self.charset,
+                        'Data': self.subject,
+                    },
+                },
+                Source=self.sender,
+                # If you are not using a configuration set, comment or delete the
+                # following line
+                #ConfigurationSetName=CONFIGURATION_SET,
+            )
+        # Display an error if something goes wrong.	
+        except ClientError as e:
+            print(e.response['Error']['Message'])
+        else:
+            print("Email sent! Message ID:"),
+            print(response['MessageId'])
         
+                
     
 
 
