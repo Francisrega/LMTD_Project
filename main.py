@@ -1,11 +1,5 @@
-# Import requests package
-import requests
+from prepareRecip import Prepare
 
-# Assign URL to variable: url
-url = 'https://www.themealdb.com/api/json/v1/1/random.php/?apikey=1'
+runProgram = Prepare()
 
-# Package the request, send the request and catch the response: r
-r = requests.get(url)
 
-# Print the text of the response
-print(r.text)
