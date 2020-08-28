@@ -4,6 +4,7 @@ import json
 import boto3
 from botocore.exceptions import ClientError
 import sqlite3
+from aws import AWSmanager
 # try:
 #     sqliteConnection = sqlite3.connect('newProject/db.sqlite3')
 #     cursor = sqliteConnection.cursor()
@@ -154,6 +155,9 @@ class Sender:
             else:
                 print("Email sent! Message ID:"),
                 print(response['MessageId'])
+        json_uploader = AWSmanager()
+        json_uploader.save_to_s3()
+        json_uploader.listBucketFile("lmtd-team-delta")
 
 
    
