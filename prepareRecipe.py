@@ -5,7 +5,6 @@ from botocore.exceptions import ClientError
 import sqlite3
 from aws import AWSmanager
 
-
 class Prepare:
     def __init__(self):
         # Assign URL to variable: url
@@ -34,14 +33,6 @@ class Prepare:
             self.r2 = json.load(psd)
         self.r3 = self.r2["meals"]
         self.r4 = self.r3[0]
-        
-
-    
-        
-        
-        
-
-        
         
         self.sendRecipe()
 
@@ -128,11 +119,3 @@ class Sender:
         json_uploader = AWSmanager()
         json_uploader.save_to_s3()
         json_uploader.listBucketFile("lmtd-team-delta")
-
-
-   
-                
-    
-
-
-
