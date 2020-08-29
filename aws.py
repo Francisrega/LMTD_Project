@@ -20,6 +20,3 @@ class AWSmanager:
 
 
 
-aws = AWSmanager()
-aws.save_to_s3()
-aws.listBucketFile("lmtd-team-delta")

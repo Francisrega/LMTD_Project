@@ -1,27 +1,10 @@
 import requests
 import json
-#import os
 import boto3
 from botocore.exceptions import ClientError
 import sqlite3
 from aws import AWSmanager
-# try:
-#     sqliteConnection = sqlite3.connect('newProject/db.sqlite3')
-#     cursor = sqliteConnection.cursor()
-#     print("Database created and Successfully Connected to SQLite")
 
-#     sqlite_select_Query = "select sqlite_version();"
-#     cursor.execute(sqlite_select_Query)
-#     record = cursor.fetchall()
-#     print("SQLite Database Version is: ", record)
-#     cursor.close()
-
-# except sqlite3.Error as error:
-#     print("Error while connecting to sqlite", error)
-# finally:
-#     if (sqliteConnection):
-#         sqliteConnection.close()
-#         print("The SQLite connection is closed")
 
 class Prepare:
     def __init__(self):
@@ -35,9 +18,9 @@ class Prepare:
         # Package the request, send the request and catch the response: r
         
         self.r = requests.get(self.url).json()
-        #print(self.r)
         self.r2 = {}
         self.r3 = {}
+
         with open('emails.json', 'w') as w:
             json.dump(self.emails_json, w, sort_keys=True, indent=4)
         with open('emails.json', 'r') as r:
@@ -63,35 +46,23 @@ class Prepare:
         self.sendRecipe()
 
     def sendRecipe(self):   
-        recipe = f"""
+        recipe_sec1 = f"""
         
             YOUR RECIPE OF THE DAY:
-            Meal: {self.r4["strMeal"]}
-            Category: {self.r4["strCategory"]}
-            Culture of Origin: {self.r4["strArea"]}
-            Ingredients you will need:
-            {self.r4["strMeasure1"]} {self.r4["strIngredient1"]}
-            {self.r4["strMeasure2"]} {self.r4["strIngredient2"]}
-            {self.r4["strMeasure3"]} {self.r4["strIngredient3"]}
-            {self.r4["strMeasure4"]} {self.r4["strIngredient4"]}
-            {self.r4["strMeasure5"]} {self.r4["strIngredient5"]}
-            {self.r4["strMeasure6"]} {self.r4["strIngredient6"]}
-            {self.r4["strMeasure7"]} {self.r4["strIngredient7"]}
-            {self.r4["strMeasure8"]} {self.r4["strIngredient8"]}
-            {self.r4["strMeasure9"]} {self.r4["strIngredient9"]}
-            {self.r4["strMeasure10"]} {self.r4["strIngredient10"]}
-            {self.r4["strMeasure11"]} {self.r4["strIngredient11"]}
-            {self.r4["strMeasure12"]} {self.r4["strIngredient12"]}
-            {self.r4["strMeasure13"]} {self.r4["strIngredient13"]}
-            {self.r4["strMeasure14"]} {self.r4["strIngredient14"]}
-            {self.r4["strMeasure15"]} {self.r4["strIngredient15"]}
-            {self.r4["strMeasure16"]} {self.r4["strIngredient16"]}
-            {self.r4["strMeasure17"]} {self.r4["strIngredient17"]}
-            {self.r4["strMeasure18"]} {self.r4["strIngredient18"]}
-            {self.r4["strMeasure19"]} {self.r4["strIngredient19"]}
-            {self.r4["strMeasure20"]} {self.r4["strIngredient20"]}
-            Instructions:
+            Meal: {self.r4["strMeal"]}\n
+            Category: {self.r4["strCategory"]}\n
+            Culture of Origin: {self.r4["strArea"]}\n
+            Ingredients you will need:\n"""
+        
+        for i in range(1, 20):
+            add = f'{self.r4[f"strMeasure{i}"]} {self.r4[f"strIngredient{i}"]}\n'
+            recipe_sec1 = recipe_sec1 + add
+        
+        recipe_sec2 = f"""Instructions:
             {self.r4["strInstructions"]}"""
+        
+        recipe = recipe_sec1 + recipe_sec2
+
         Sender(recipe, self.email_list)
 
 class Sender:
@@ -117,7 +88,6 @@ class Sender:
     
     def sendRecipe(self):
         for i in range(len(self.email_list)):
-            # self.sender = "dev.martinez86@gmail.com"
             recipient = self.email_list[i]
             self.recipient = recipient[0]
             try:
