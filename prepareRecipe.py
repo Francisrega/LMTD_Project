@@ -60,7 +60,7 @@ class Sender:
     def __init__(self, recipe, email_list):
         self.recipe = recipe
         self.email_list = email_list
-        self.sender = "dev.martinez86@gmail.com"
+        self.sender = "thefoodiegoodies@gmail.com"
         self.recipient = "dev.martinez86@gmail.com"
         self.aws_region = "us-east-1"
         self.subject = "Your New Recipe suggestion"
